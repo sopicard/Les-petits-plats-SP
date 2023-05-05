@@ -88,15 +88,15 @@ header {
     border-radius: 0.3rem;  
 }
 
-.tag-button.blue, .ingredients {
+.tag-button.blue, .ingredients-button {
     background-color: #3282F7;
 } 
 
-.tag-button.green, .appliances {
+.tag-button.green, .appliances-button {
     background-color: #68D9A4;
 }
 
-.tag-button.red, .ustensils {
+.tag-button.red, .utensils-button {
     background-color: #ED6454;
 }
 
@@ -200,6 +200,48 @@ header {
     -webkit-box-orient: vertical;
 }
 
+.popup-ingredients {
+    font-family: "Lato-Regular", sans-serif;
+    font-size: 1.1rem;
+    position: absolute;
+    top: 28%;
+    left: 4%;
+    background-color: #3282F7;
+    color: #FFFFFF;
+    padding: 1rem;
+    border-radius: 0.3rem;
+    width: 50%;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+  
+  .popup-search-bar {
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1.1rem;
+    width: 97%;
+    border: none;
+    padding: 1rem 0rem;
+    background-color: #3282F7;
+    color: white;
+  }
+
+  .popup-search-bar::placeholder {
+    color: #999999;
+  }
+  
+  .popup-ingredients-list {
+    list-style-type: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+  }
+  
+  .popup-ingredient-item {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+
 @media screen and (max-width: 600px) {
     
     .logo-img {
@@ -225,5 +267,13 @@ header {
     .recipes-container {
         margin: 3rem 1rem;
       grid-template-columns: 1fr;
+    }
+
+    .popup-ingredients {
+        width: 86%;
+    }
+
+    .popup-search-bar {
+        width: 85%;
     }
   }

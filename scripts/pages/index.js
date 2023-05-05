@@ -1,4 +1,5 @@
 import { recipeFactory } from "../factories/recipeFactory.js";
+import { displayIngredientsPopup } from "../utils/ingredients.js";
 
 // Récupère les données des recettes à partir du fichier JSON
 async function getRecipes() {
@@ -23,6 +24,10 @@ function displayRecipeCards(recipes) {
 async function init() {
   const recipes = await getRecipes();
   displayRecipeCards(recipes);
+
+  const ingredientsButton = document.querySelector(".ingredients-button");
+  ingredientsButton.addEventListener("click", () => {displayIngredientsPopup(recipes)
+    });
 }
 
 // Démarre l'application en appelant la fonction init
