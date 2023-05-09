@@ -1,5 +1,5 @@
 import { recipeFactory } from "../factories/recipeFactory.js";
-import { displayIngredientsPopup } from "../utils/ingredients.js";
+import { displayPopup } from "../utils/popup.js";
 
 // Récupère les données des recettes à partir du fichier JSON
 async function getRecipes() {
@@ -22,13 +22,27 @@ function displayRecipeCards(recipes) {
 
 // Initialise l'application en affichant les cartes des recettes
 async function init() {
+
   const recipes = await getRecipes();
   displayRecipeCards(recipes);
 
   const ingredientsButton = document.querySelector(".ingredients-button");
-  ingredientsButton.addEventListener("click", () => {displayIngredientsPopup(recipes)
-    });
+  ingredientsButton.addEventListener("click", () => {
+    displayPopup(recipes, "ingredients");
+  });
+
+  const applianceButton = document.querySelector(".appliance-button");
+  applianceButton.addEventListener("click", () => {
+      displayPopup(recipes, "appliance");
+  });
+
+  const utensilsButton = document.querySelector(".utensils-button");
+  utensilsButton.addEventListener("click", () => {
+      displayPopup(recipes, "utensils");
+  }); 
+  
 }
+  
 
 // Démarre l'application en appelant la fonction init
 init();

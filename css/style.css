@@ -77,27 +77,125 @@ header {
     font-size: x-large;
 }
 
-.buttons-container {
+.tags-container {
     display: flex;
     margin: 2rem 4rem;
     gap: 1rem;
 }
 
-.tag-button {  
-    padding: 1.5rem 1rem; 
-    border-radius: 0.3rem;  
+.fa-circle-xmark {
+    border: none;
+    color: white;
+    font-size: larger;
+    align-self: center;
+    margin-left: 0.5rem;
 }
 
-.tag-button.blue, .ingredients-button {
+.tag {
+    display: flex;
+    padding: 1rem 2rem;
+    border-radius: 0.3rem;
+    color: white;
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1rem;
+}
+
+.buttons-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 2rem 4rem;
+    position: relative;
+}
+
+.popup-container {
+    max-height: 400px;
+}
+
+.popup-placeholder {
+    width: 0;
+    flex-grow: 0;
+    transition: width 0.3s ease;
+}
+
+.popup {
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    font-family: "Lato-Regular", sans-serif;
+    font-size: 1.1rem;
+    position: absolute;
+    top: 0;  
+    color: #FFFFFF;
+    border-radius: 0.3rem;
+    width: 55%;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+.ingredients, .ingredients-button, .tag.ingredients{
     background-color: #3282F7;
 } 
 
-.tag-button.green, .appliances-button {
+.appliance, .appliance-button, .tag.appliance {
     background-color: #68D9A4;
 }
 
-.tag-button.red, .utensils-button {
+.utensils, .utensils-button, .tag.utensils {
     background-color: #ED6454;
+}
+
+.popup-visible {
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-search-bar-content {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.popup-search-bar {
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1.1rem;
+    width: 97%;
+    border: none;
+    border-radius: 0.3rem;
+    outline: none;
+    padding: 1rem;
+    color: white;
+}
+
+.popup-search-bar::placeholder {
+    color: #999999;
+}
+
+.popup-search-bar:focus {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+.fa-chevron-up {
+    align-self: center;
+    color: white;
+}
+
+.popup-list {
+    list-style-type: none;
+    padding: 0rem 1rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
+}
+
+.popup-item {
+    padding: 0.3rem 1.5rem;
+    cursor: pointer;
+}
+
+.tag-button {  
+    padding: 1.5rem 1rem; 
+    border-radius: 0.3rem; 
+    margin-right: 1rem; 
 }
 
 .tag-button button {
@@ -105,6 +203,10 @@ header {
     color: white;
     font-family: "Lato-Bold", sans-serif;
     font-size: 1.1rem;
+}
+
+.hidden-tag-button {
+    display: none;
 }
 
 .fa-chevron-down {
@@ -200,77 +302,36 @@ header {
     -webkit-box-orient: vertical;
 }
 
-.popup-ingredients {
-    font-family: "Lato-Regular", sans-serif;
-    font-size: 1.1rem;
-    position: absolute;
-    top: 28%;
-    left: 4%;
-    background-color: #3282F7;
-    color: #FFFFFF;
-    padding: 1rem;
-    border-radius: 0.3rem;
-    width: 50%;
-    max-height: 400px;
-    overflow-y: auto;
-  }
-  
-  .popup-search-bar {
-    font-family: "Lato-Bold", sans-serif;
-    font-size: 1.1rem;
-    width: 97%;
-    border: none;
-    padding: 1rem 0rem;
-    background-color: #3282F7;
-    color: white;
-  }
-
-  .popup-search-bar::placeholder {
-    color: #999999;
-  }
-  
-  .popup-ingredients-list {
-    list-style-type: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(30%, 1fr));
-  }
-  
-  .popup-ingredient-item {
-    padding: 5px;
-    cursor: pointer;
-  }
-  
-
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 900px) {
     
     .logo-img {
         width: 50%;
     }
 
     .search-container {
-        margin: 0 1rem;
+        margin: 0 3rem;
     }
 
     .buttons-container {
         margin: 1rem;
-        display: flex;
+        /* display: flex;
         flex-direction: column;
+        align-items: center;
+        position: relative; */
     }
 
     .tag-button {
-        width: 40%;
+        width: 20%;
         margin: auto;
-        display: flex;
-        justify-content: space-around;
-    }
-    .recipes-container {
-        margin: 3rem 1rem;
-      grid-template-columns: 1fr;
     }
 
-    .popup-ingredients {
-        width: 86%;
+    .recipes-container {
+        margin: 3rem;
+        grid-template-columns: 1fr;
+    }
+
+    .popup {
+        width: 45%;
     }
 
     .popup-search-bar {
