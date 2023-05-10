@@ -59,7 +59,7 @@ function createPopup(uniqueElements, elementType) {
     popupArrowUp.classList.add("fa-solid", "fa-chevron-up");
     popupArrowUp.addEventListener("click", () => {
         popup.remove();
-        document.querySelector(`.tag-button.${elementType}`).classList.remove("hidden-tag-button");
+        document.querySelector(`.filter-button.${elementType}`).classList.remove("hidden-filter-button");
         document.querySelector(".popup-placeholder").style.width = "0";
     });    
     popupSearchBarContent.appendChild(popupArrowUp);
@@ -114,14 +114,14 @@ export function displayPopup(recipes, elementType) {
     // Fermer la popup active (s'il y en a une)
     if (visiblePopup) {
         visiblePopup.classList.remove("popup-visible");
-        document.querySelector(`.tag-button.${visiblePopupType}`).classList.remove("hidden-tag-button");
+        document.querySelector(`.filter-button.${visiblePopupType}`).classList.remove("hidden-filter-button");
         document.querySelector('.popup-placeholder').style.width = "0";
   }
 
     visiblePopup = popup;
     visiblePopupType = elementType;
 
-    document.querySelector(`.tag-button.${elementType}`).classList.add("hidden-tag-button");
+    document.querySelector(`.filter-button.${elementType}`).classList.add("hidden-filter-button");
     document.querySelector('.popup-placeholder').style.width = "calc(55% + 1rem)";
 
     const popupContainer = document.querySelector(".popup-container");
