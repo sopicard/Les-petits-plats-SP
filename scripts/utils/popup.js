@@ -1,15 +1,16 @@
 import { filterElements} from "../utils/filter.js"
 import { addTag } from "../utils/filter.js";
 
-// Fonction générique pour obtenir des éléments uniques
+// Fonction générique pour obtenir des éléments uniques à partir des recettes
 function getUniqueElements(recipes, element) {
+	// Collection d'éléments uniques
 	const uniqueElements = new Set();
 
 	recipes.forEach(recipe => {
 		// Vérifiez si l'élément que nous voulons est "ingredients"
 		if (element === "ingredients") {
 			const items = recipe[element];
-			// Si items est un tableau d'objets (pour "ingredients")
+			// Si items est un tableau d'objets (pour "ingredients" [{...}, {...}])
 			if (Array.isArray(items) && typeof items[0] === "object") {
 				items.forEach(item => {
 					uniqueElements.add(item.ingredient);
@@ -19,11 +20,11 @@ function getUniqueElements(recipes, element) {
 		// Pour les autres éléments ("appliance" et "utensils")
 		else {
 			const items = recipe[element];
-			// Si items est une chaîne (pour "appliance")
+			// Si items est une chaîne (pour "appliance" "...")
 			if (typeof items === "string") {
 				uniqueElements.add(items);
 			} 
-			// Si items est un tableau de chaînes (pour "utensils")
+			// Si items est un tableau de chaînes (pour "utensils" ["...", "..."])
 			else if (Array.isArray(items) && typeof items[0] === "string") {
 				items.forEach(item => {
 					uniqueElements.add(item);

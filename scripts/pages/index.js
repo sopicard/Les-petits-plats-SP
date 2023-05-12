@@ -23,27 +23,23 @@ export function displayRecipeCards(recipes) {
 }
 
 async function init() {
-
+	// Récupère et affiche les recettes
 	const recipes = await getRecipes();
 	displayRecipeCards(recipes);
 
-	const ingredientsButton = document.querySelector(".ingredients-button");
-	ingredientsButton.addEventListener("click", () => {
-		displayPopup(recipes, "ingredients");
-	});
+	const buttonTypes = ["ingredients", "appliance", "utensils"];
 
-	const applianceButton = document.querySelector(".appliance-button");
-	applianceButton.addEventListener("click", () => {
-		displayPopup(recipes, "appliance");
-	});
-
-	const utensilsButton = document.querySelector(".utensils-button");
-	utensilsButton.addEventListener("click", () => {
-		displayPopup(recipes, "utensils");
-	}); 
+	buttonTypes.forEach((buttonType) => {
+		// Dans tableau de boutons, récupère le bouton correspondant au type actuel
+		const button = document.querySelector(`.${buttonType}-button`);
+		button.addEventListener("click", () => {
+		displayPopup(recipes, buttonType);
+		});
+	});	
 
 	// Gestionnaire d'événements pour la barre de recherche
 	document.querySelector("#search").addEventListener("input", function() {
+		// Récupère la valeur de la barre de recherche
 		const query = this.value;
 		const container = document.querySelector(".recipes-container");
 		
@@ -59,13 +55,16 @@ async function init() {
 			// Si la requête a moins de 3 caractères, ne fait rien
 			return;
 		} else { 
+			// Filtre les recettes en fonction de la requête et des tags
 			filteredRecipes = filterRecipes(recipes, query, tags);
-			container.innerHTML = '';  // Vide le conteneur
+			  // Vide le conteneur
+			container.innerHTML = '';
 			if(filteredRecipes.length === 0) {
 				// Affiche un message indiquant qu'aucune recette ne correspond
 				displayMessageNoRecipes();
 			} else {
-				displayRecipeCards(filteredRecipes);  // Affiche les nouvelles recettes
+				// Affiche les nouvelles recettes
+				displayRecipeCards(filteredRecipes);
 			}
 		}
 	});  

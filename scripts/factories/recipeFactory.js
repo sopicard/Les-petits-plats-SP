@@ -35,8 +35,11 @@ export function recipeFactory(recipe) {
   const ingredientsList = document.createElement("ul");
   ingredientsList.classList.add("recipe-list");
 
+  // Parcours de chaque ingrédient de la recette
   recipe.ingredients.forEach(ingredient => {
     const listItem = document.createElement("li");
+    // Après le nom de l'ingrédient, on ajoute la quantité et l'unité si elles existent,
+    // sinon on ajoute une chaîne vide
     listItem.innerHTML = `<strong>${ingredient.ingredient}</strong>: ${
       ingredient.quantity ? ingredient.quantity : ''
     }${ingredient.unit ? ' ' + ingredient.unit : ''}`;
