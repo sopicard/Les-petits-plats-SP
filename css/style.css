@@ -129,6 +129,10 @@ header {
     transition: width 0.3s ease;
 }
 
+.popup-expanded {
+    width: calc(55% + 1rem);
+}
+
 .popup {
     margin-right: 1rem;
     display: flex;
@@ -309,6 +313,14 @@ header {
     -webkit-box-orient: vertical;
 }
 
+.no-recipe {
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1.2rem;
+    color: #ED6454;
+    text-align: center;
+    margin-top: 20rem;
+}
+
 @media screen and (max-width: 900px) {
     
     .logo-img {
@@ -342,13 +354,17 @@ header {
         aspect-ratio: 4/1;
     }
 
-    .popup-placeholder {
+    /* .popup-placeholder {
         width: 45%;
+    } */
+
+    .popup-expanded {
+        width: 50%;
     }
 
-    .popup {
+    /* .popup {
         width: 45%;
-    }
+    } */
 
     .popup-list {
         display: grid;

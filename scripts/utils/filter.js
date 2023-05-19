@@ -1,14 +1,24 @@
 import { displayRecipeCards } from "../pages/index.js";
 
-// Fonction pour mettre à jour le DOM en fonction de la requête de recherche et des tags sélectionnés
+// Récupère la requête de l'utilisateur à partir du DOM
+function getQueryFromDOM() {
+  const text = document.querySelector("#search").value.toLowerCase();
+  const tags = Array.from(document.querySelectorAll(".tag")).map(tag => tag.textContent.toLowerCase());
+
+  return { text, tags};
+}
+
+// Fonction pour mettre à jour le DOM en fonction des recettes filtrées
 function updateDOM(recipes) {
-  // Récupère valeur barre recherche + tags actuellement sélectionnés
-  const query = document.querySelector("#search").value;
-  const tags = Array.from(document.querySelectorAll('.tag')).map(tag => tag.textContent);
-  // Filtrer les recettes en fonction de la requête et des tags
-  const filteredRecipes = filterRecipes(recipes, query, tags);
+  // Récupère la requête à partir du DOM
+  const query = getQueryFromDOM();
+  const filteredProcessedRecipes = filterRecipes(window.processedRecipes, query);
+
+  const filteredIds = filteredProcessedRecipes.map(recipe => recipe.id);
+
+  const filteredRecipes = recipes.filter(recipe => filteredIds.includes(recipe.id));
   const container = document.querySelector(".recipes-container");
-  container.innerHTML = ''; 
+  container.innerHTML = " "; 
 
   // Si aucune recette n'est trouvée, affiche un message
   if(filteredRecipes.length === 0) { 
@@ -20,23 +30,29 @@ function updateDOM(recipes) {
 }
 
 // Filtre les recettes en fonction d'une requête et de tags
-export function filterRecipes(recipes, query = '', tags = []) {
-  return recipes.filter(recipe => {
-    const lowerCaseQuery = query.toLowerCase();
-    const inTitle = recipe.name.toLowerCase().includes(lowerCaseQuery);
-    const inDescription = recipe.description.toLowerCase().includes(lowerCaseQuery);
-    const inIngredients = recipe.ingredients.some(ingredient =>
-      ingredient.ingredient.toLowerCase().includes(lowerCaseQuery)
-    );
+export function filterRecipes(recipes, query = { text: "", tags: [] }) {
+  const queryText = query.text;
 
-    const tagsMatch = tags.every(tag =>
-      recipe.ingredients.map(ingredient => ingredient.ingredient.toLowerCase()).includes(tag.toLowerCase()) ||
-      recipe.appliance.toLowerCase().includes(tag.toLowerCase()) ||
-      recipe.utensils.map(utensil => utensil.toLowerCase()).includes(tag.toLowerCase())
+  function matchesQuery(ingredient, query) {
+    return ingredient ? ingredient.includes(query) : false;
+  }
+
+  const filtered = recipes.filter(recipe => {
+    const inTitle = recipe.name.includes(queryText);
+    const inDescription = recipe.description.includes(queryText);
+    const inIngredients = recipe.ingredients.some(ingredient => matchesQuery(ingredient, queryText));
+
+    const tagsMatch = query.tags.every(tag =>
+      recipe.ingredients.some(ingredient => matchesQuery(ingredient, tag)) ||
+      recipe.appliance.includes(tag) ||
+      recipe.utensils.some(utensil => utensil.includes(tag))
     );
 
     return (inTitle || inDescription || inIngredients) && tagsMatch;
   });
+
+  console.log("Filtered recipes:", filtered);
+  return filtered;
 }
 
 // Filtre les éléments (ingrédients, appareils, ustensiles) en fonction d'une requête
@@ -46,8 +62,10 @@ export function filterElements (elements, query) {
 
 // Ajoute un tag à la liste des tags sélectionnés
 export function addTag(tagText, elementType, recipes) {
+  const lowerCaseTagText = tagText.toLowerCase();
+
   const tag = document.createElement("div");
-  tag.textContent = tagText;
+  tag.textContent = lowerCaseTagText;
   tag.classList.add("tag", elementType);
 
   const cross = document.createElement("button");
@@ -68,6 +86,11 @@ export function addTag(tagText, elementType, recipes) {
 
 // Affiche le message <p>
 export function displayMessageNoRecipes() {
-  const container = document.querySelector(".recipes-container");
-  container.innerHTML = "<p>Aucune recette ne correspond à votre recherche.</p>";
+  const main = document.querySelector("main");
+
+  const p = document.createElement("p");
+  p.classList.add("no-recipe");
+  p.textContent = "Aucune recette ne correspond à votre recherche.";
+  
+  main.appendChild(p);
 }
