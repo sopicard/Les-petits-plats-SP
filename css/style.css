@@ -321,6 +321,10 @@ header {
     margin-top: 20rem;
 }
 
+.no-recipe-hidden {
+    display: none;
+}
+
 @media screen and (max-width: 900px) {
     
     .logo-img {

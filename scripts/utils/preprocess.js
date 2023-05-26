@@ -5,11 +5,9 @@ export async function preprocessRecipes() {
     // Récupère les recettes
     const recipes = await getRecipes();
 
-    console.log("Preprocessing recipes...");
-
     // Crée des Sets pour stocker des éléments uniques
     const uniqueIngredients = new Set();
-    const uniqueAppliances = new Set();
+    const uniqueAppliance = new Set();
     const uniqueUtensils = new Set();
 
     // Pour chaque recette, met à jour les recettes et remplit les Sets
@@ -25,7 +23,7 @@ export async function preprocessRecipes() {
 
         // Traite les appareils et ajoute l'appareil aux appareils uniques
         const lowerCaseAppliance = recipe.appliance.toLowerCase();
-        uniqueAppliances.add(lowerCaseAppliance);  
+        uniqueAppliance.add(lowerCaseAppliance);  
         recipe.appliance = lowerCaseAppliance;
 
         // Traite les ustensiles
@@ -36,17 +34,10 @@ export async function preprocessRecipes() {
         });
     });
 
-    console.log("Finished preprocessing recipes.");
-
-    console.log("Processed recipes:", recipes);
-    console.log("Unique ingredients:", Array.from(uniqueIngredients));
-    console.log("Unique appliances:", Array.from(uniqueAppliances));
-    console.log("Unique utensils:", Array.from(uniqueUtensils));
-
     return {
         processedRecipes: recipes,
         uniqueIngredients: Array.from(uniqueIngredients),
-        uniqueAppliances: Array.from(uniqueAppliances),
+        uniqueAppliance: Array.from(uniqueAppliance),
         uniqueUtensils: Array.from(uniqueUtensils),
     };
 }

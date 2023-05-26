@@ -1,6 +1,6 @@
 import { recipeFactory } from "../factories/recipeFactory.js";
-import { displayPopup } from "../utils/popup.js";
-import { filterRecipes } from "../utils/filter.js";
+import { displayPopup, updateElementsPopup, updatePopupLists } from "../utils/popup.js";
+import { filterRecipes, getQueryFromDOM } from "../utils/filter.js";
 import { preprocessRecipes } from "../utils/preprocess.js";
 
 // Récupère les données des recettes à partir du fichier JSON
@@ -31,12 +31,19 @@ function filterAndDisplayRecipes(query) {
 	} else {
 	  const filteredRecipes = filterRecipes(window.processedRecipes, query);
 	  displayRecipeCards(filteredRecipes);
+	  console.log("recettes:", filteredRecipes);
+
+	  // Mettre à jour les listes de popup après le filtrage
+	  updateElementsPopup(filteredRecipes);
+	  updatePopupLists();
+
+	  console.log("recettes:", filteredRecipes);
 	}
   }
 
 async function init() {
     // Récupère et prépare les recettes
-    const { processedRecipes, uniqueIngredients, uniqueAppliances, uniqueUtensils } = await preprocessRecipes();
+    const { processedRecipes, uniqueIngredients, uniqueAppliance, uniqueUtensils } = await preprocessRecipes();
 
 	window.processedRecipes = processedRecipes;
 
@@ -46,7 +53,7 @@ async function init() {
     // Stocke les ensembles d'éléments uniques dans l'objet global
     window.uniqueRecipeElements = {
         ingredients: uniqueIngredients,
-        appliance: uniqueAppliances,
+        appliance: uniqueAppliance,
         utensils: uniqueUtensils,
     };
 
@@ -66,15 +73,13 @@ async function init() {
 
 	// Gestionnaire d'événements pour la barre de recherche
 	document.querySelector("#search").addEventListener("input", function() {
-	// Récupère la valeur de la barre de recherche
-	const queryText = this.value;
-	
-	// Récupère tous les tags actuellement sélectionnés
-	let tags = Array.from(document.querySelectorAll(".tag")).map(tag => tag.textContent);
+	  // Récupère la requête de l'utilisateur à partir du DOM
+	  const query = getQueryFromDOM();
 
-	// Filtre les recettes en fonction de la requête et des tags
-	const query = { text: queryText, tags };
-	filterAndDisplayRecipes(query);
+	  console.log(query);
+	
+	  // Filtre les recettes en fonction de la requête et des tags
+	  filterAndDisplayRecipes(query);
 	});  
 }  
 

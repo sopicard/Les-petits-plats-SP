@@ -1,9 +1,13 @@
 import { displayRecipeCards } from "../pages/index.js";
+import { updateElementsPopup, updatePopupLists } from "./popup.js";
 
 // Récupère la requête de l'utilisateur à partir du DOM
-function getQueryFromDOM() {
+export function getQueryFromDOM() {
   const text = document.querySelector("#search").value.toLowerCase();
   const tags = Array.from(document.querySelectorAll(".tag")).map(tag => tag.textContent.toLowerCase());
+
+  console.log("get:", text);
+  console.log("get:", tags);
 
   return { text, tags};
 }
@@ -12,21 +16,22 @@ function getQueryFromDOM() {
 function updateDOM(recipes) {
   // Récupère la requête à partir du DOM
   const query = getQueryFromDOM();
+
   const filteredProcessedRecipes = filterRecipes(window.processedRecipes, query);
-
   const filteredIds = filteredProcessedRecipes.map(recipe => recipe.id);
-
   const filteredRecipes = recipes.filter(recipe => filteredIds.includes(recipe.id));
-  const container = document.querySelector(".recipes-container");
-  container.innerHTML = " "; 
 
-  // Si aucune recette n'est trouvée, affiche un message
-  if(filteredRecipes.length === 0) { 
-    displayMessageNoRecipes();
+  const noRecipe = document.querySelector(".no-recipe");
+
+  if (filteredRecipes.length === 0) {
+    // S'il n'y a pas de recettes correspondantes, affiche le message et arrête la fonction
+    noRecipe.classList.remove("no-recipe-hidden");
   } else {
-    // sinon affiche les recettes filtrées
-    displayRecipeCards(filteredRecipes);
+    // Sinon, cache le message
+    noRecipe.classList.add("no-recipe-hidden");
   }
+
+  displayRecipeCards(filteredRecipes);
 }
 
 // Filtre les recettes en fonction d'une requête et de tags
@@ -38,8 +43,8 @@ export function filterRecipes(recipes, query = { text: "", tags: [] }) {
   }
 
   const filtered = recipes.filter(recipe => {
-    const inTitle = recipe.name.includes(queryText);
-    const inDescription = recipe.description.includes(queryText);
+    const inTitle = recipe.name.toLowerCase().includes(queryText);
+    const inDescription = recipe.description.toLowerCase().includes(queryText);
     const inIngredients = recipe.ingredients.some(ingredient => matchesQuery(ingredient, queryText));
 
     const tagsMatch = query.tags.every(tag =>
@@ -51,7 +56,6 @@ export function filterRecipes(recipes, query = { text: "", tags: [] }) {
     return (inTitle || inDescription || inIngredients) && tagsMatch;
   });
 
-  console.log("Filtered recipes:", filtered);
   return filtered;
 }
 
@@ -61,7 +65,7 @@ export function filterElements (elements, query) {
 }
 
 // Ajoute un tag à la liste des tags sélectionnés
-export function addTag(tagText, elementType, recipes) {
+export function addTag(tagText, elementType, processedRecipes) {
   const lowerCaseTagText = tagText.toLowerCase();
 
   const tag = document.createElement("div");
@@ -73,7 +77,13 @@ export function addTag(tagText, elementType, recipes) {
 
   cross.addEventListener("click", function() {
     tag.remove();
-    updateDOM(recipes);
+
+    const query = getQueryFromDOM();
+    const filteredRecipes = filterRecipes(processedRecipes, query);
+
+    updateElementsPopup(filteredRecipes);
+    updatePopupLists();
+    updateDOM(filteredRecipes);
   });
 
   tag.appendChild(cross);
@@ -81,16 +91,10 @@ export function addTag(tagText, elementType, recipes) {
   const tagsContainer = document.querySelector(".tags-container");
   tagsContainer.appendChild(tag);
 
-  updateDOM(recipes);
-}
+  const query = getQueryFromDOM();
+  const filteredRecipes = filterRecipes(processedRecipes, query);
 
-// Affiche le message <p>
-export function displayMessageNoRecipes() {
-  const main = document.querySelector("main");
-
-  const p = document.createElement("p");
-  p.classList.add("no-recipe");
-  p.textContent = "Aucune recette ne correspond à votre recherche.";
-  
-  main.appendChild(p);
+  updateElementsPopup(filteredRecipes);
+  updatePopupLists();
+  updateDOM(filteredRecipes);
 }
