@@ -1,6 +1,6 @@
 import { recipeFactory } from "../factories/recipeFactory.js";
 import { displayPopup, updateElementsPopup, updatePopupLists } from "../utils/popup.js";
-import { filterRecipes, getQueryFromDOM } from "../utils/filter.js";
+import { filterRecipes, getQueryFromDOM, displayMessageNoRecipes } from "../utils/filter.js";
 import { preprocessRecipes } from "../utils/preprocess.js";
 
 // Récupère les données des recettes à partir du fichier JSON
@@ -15,31 +15,41 @@ export async function getRecipes() {
 export function displayRecipeCards(recipes) {
 	const container = document.querySelector(".recipes-container");
 
-	container.innerHTML = " ";
+	// Efface le conteneur avant d'ajouter de nouvelles cartes de recettes
+	container.innerHTML = "";
 
-	recipes.forEach(recipe => {
-		const card = recipe.getRecipeCardDOM();
-		container.appendChild(card);
-	});
+	if(recipes.length === 0) {
+		// Affiche le message s'il n'y a pas de recette
+		displayMessageNoRecipes();
+		console.log("Aucune recette ne correspond");
+	} else {
+		recipes.forEach(recipe => {
+			const card = recipe.getRecipeCardDOM();
+			container.appendChild(card);
+		});
+	}
 }
+
 
 // Filtrage et affichage des recettes
 function filterAndDisplayRecipes(query) {
-	if (query.text.length < 3 && query.tags.length === 0) {
-	  // Si la requête est vide, affiche toutes les recettes
-	  displayRecipeCards(window.processedRecipes);
+    const filteredRecipes = filterRecipes(window.processedRecipes, query);
+
+    if (query.text.length < 3 && query.tags.length === 0) {
+		// Si la requête est vide, affiche toutes les recettes
+		displayRecipeCards(window.processedRecipes);
 	} else {
-	  const filteredRecipes = filterRecipes(window.processedRecipes, query);
-	  displayRecipeCards(filteredRecipes);
-	  console.log("recettes:", filteredRecipes);
+		// Si des recettes correspondent à la requête, les affiche
+		displayRecipeCards(filteredRecipes);
 
-	  // Mettre à jour les listes de popup après le filtrage
-	  updateElementsPopup(filteredRecipes);
-	  updatePopupLists();
+		// Met à jour les listes de popup après le filtrage
+		updateElementsPopup(filteredRecipes);
+		updatePopupLists();
 
-	  console.log("recettes:", filteredRecipes);
-	}
-  }
+		console.log("recettes:", filteredRecipes);
+    }
+}
+
 
 async function init() {
     // Récupère et prépare les recettes

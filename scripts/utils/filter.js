@@ -21,17 +21,11 @@ function updateDOM(recipes) {
   const filteredIds = filteredProcessedRecipes.map(recipe => recipe.id);
   const filteredRecipes = recipes.filter(recipe => filteredIds.includes(recipe.id));
 
-  const noRecipe = document.querySelector(".no-recipe");
-
   if (filteredRecipes.length === 0) {
-    // S'il n'y a pas de recettes correspondantes, affiche le message et arrête la fonction
-    noRecipe.classList.remove("no-recipe-hidden");
+    displayMessageNoRecipes
   } else {
-    // Sinon, cache le message
-    noRecipe.classList.add("no-recipe-hidden");
+    displayRecipeCards(filteredRecipes); 
   }
-
-  displayRecipeCards(filteredRecipes);
 }
 
 // Filtre les recettes en fonction d'une requête et de tags
@@ -98,3 +92,18 @@ export function addTag(tagText, elementType, processedRecipes) {
   updatePopupLists();
   updateDOM(filteredRecipes);
 }
+
+  // Affiche le message <p>
+  export function displayMessageNoRecipes() {
+    const recipesSection = document.querySelector(".recipes-section");
+
+    // Supprime tout message précédent
+    const previousMessage = document.querySelector(".no-recipes-message");
+    if (previousMessage) previousMessage.remove();
+  
+    const message = document.createElement("p");
+    message.classList.add("no-recipes-message");
+    message.textContent = "Aucune recette ne correspond à votre recherche";
+    
+    recipesSection.appendChild(message);
+  }

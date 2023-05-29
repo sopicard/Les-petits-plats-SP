@@ -252,6 +252,7 @@ header {
     flex-grow: 1;
     padding: 1rem 1rem 3rem;
     background-color: #E7E7E7;
+    border-radius: 0 0 0.3rem 0.3rem;
 }
 
 .recipe-presentation {
@@ -313,16 +314,11 @@ header {
     -webkit-box-orient: vertical;
 }
 
-.no-recipe {
-    font-family: "Lato-Bold", sans-serif;
-    font-size: 1.2rem;
-    color: #ED6454;
+.no-recipes-message {
     text-align: center;
-    margin-top: 20rem;
-}
-
-.no-recipe-hidden {
-    display: none;
+    font-family: "Lato-Bold", sans-serif;
+    font-size: 1.4rem;
+    color: #ED6454;
 }
 
 @media screen and (max-width: 900px) {
