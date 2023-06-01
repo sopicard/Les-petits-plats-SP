@@ -13,8 +13,11 @@ export async function getRecipes() {
 
 // Affiche la carte de chaque recette
 export function displayRecipeCards(recipes) {
-	const container = document.querySelector(".recipes-container");
+	// Supprime le message "Aucune recette ne correspond" s'il existe
+	const previousMessage = document.querySelector(".no-recipes-message");
+	if (previousMessage) previousMessage.remove();
 
+	const container = document.querySelector(".recipes-container");
 	// Efface le conteneur avant d'ajouter de nouvelles cartes de recettes
 	container.innerHTML = "";
 

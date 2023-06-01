@@ -7,7 +7,13 @@ export function recipeFactory(data) {
     card.classList.add("recipe-card");
 
     const imgDiv = document.createElement("div");
-    imgDiv.classList.add("recipe-img");
+    imgDiv.classList.add("recipe-img-box");
+
+    const img = document.createElement("img");
+    img.classList.add("recipe-img");
+    img.src = `assets/img/photos_recettes/${id}.jpg`;
+    img.alt = name;  // Pour l'accessibilité, ajoutez un texte alternatif à l'image.
+    imgDiv.appendChild(img);
 
     const contentDiv = document.createElement("div");
     contentDiv.classList.add("recipe-content");
