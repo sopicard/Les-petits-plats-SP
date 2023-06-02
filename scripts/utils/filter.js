@@ -6,9 +6,6 @@ export function getQueryFromDOM() {
   const text = document.querySelector("#search").value.toLowerCase();
   const tags = Array.from(document.querySelectorAll(".tag")).map(tag => tag.textContent.toLowerCase());
 
-  console.log("get:", text);
-  console.log("get:", tags);
-
   return { text, tags};
 }
 
@@ -17,7 +14,11 @@ function updateDOM(recipes) {
   // Récupère la requête à partir du DOM
   const query = getQueryFromDOM();
 
+  console.log("updateDOM query:", query);
+
   const filteredProcessedRecipes = filterRecipes(window.processedRecipes, query);
+  console.log("updateDOM filteredProcessedRecipes:", filteredProcessedRecipes);
+
   const filteredIds = filteredProcessedRecipes.map(recipe => recipe.id);
   const filteredRecipes = recipes.filter(recipe => filteredIds.includes(recipe.id));
 
@@ -30,19 +31,23 @@ function updateDOM(recipes) {
 
 // Filtre les recettes en fonction d'une requête et de tags
 export function filterRecipes(recipes, query = { text: "", tags: [] }) {
-  const queryText = query.text;
+  // Divise la requête en mots et les stocke dans queryTextWords
+  const queryTextWords = query.text.toLowerCase().split(" ");
 
-  function matchesQuery(ingredient, query) {
-    return ingredient ? ingredient.includes(query) : false;
+  // Vérifie si tous les mots de la requête sont présents dans les mots de l'élément donné
+  function matchesQuery(item, queryWords) {
+    return queryWords.every(queryWord => item.toLowerCase().includes(queryWord));
   }
 
   const filtered = recipes.filter(recipe => {
-    const inTitle = recipe.name.toLowerCase().includes(queryText);
-    const inDescription = recipe.description.toLowerCase().includes(queryText);
-    const inIngredients = recipe.ingredients.some(ingredient => matchesQuery(ingredient, queryText));
+    const inTitle = matchesQuery(recipe.name, queryTextWords);
+    const inDescription = matchesQuery(recipe.description, queryTextWords);
+    const inIngredients = recipe.ingredients.some(ingredient =>
+      matchesQuery(ingredient, queryTextWords)
+    );
 
     const tagsMatch = query.tags.every(tag =>
-      recipe.ingredients.some(ingredient => matchesQuery(ingredient, tag)) ||
+      recipe.ingredients.some(ingredient => matchesQuery(ingredient, [tag])) ||
       recipe.appliance.includes(tag) ||
       recipe.utensils.some(utensil => utensil.includes(tag))
     );
@@ -52,6 +57,7 @@ export function filterRecipes(recipes, query = { text: "", tags: [] }) {
 
   return filtered;
 }
+
 
 // Filtre les éléments (ingrédients, appareils, ustensiles) en fonction d'une requête
 export function filterElements (elements, query) {
