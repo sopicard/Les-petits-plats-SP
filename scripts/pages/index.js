@@ -38,16 +38,16 @@ export function displayRecipeCards(recipes) {
 function filterAndDisplayRecipes(query) {
     const filteredRecipes = filterRecipes(window.processedRecipes, query);
 
+	// Met à jour les listes de popup après le filtrage
+	updateElementsPopup(filteredRecipes);
+	updatePopupLists();
+
     if (query.text.length < 3 && query.tags.length === 0) {
 		// Si la requête est vide, affiche toutes les recettes
 		displayRecipeCards(window.processedRecipes);
 	} else {
 		// Si des recettes correspondent à la requête, les affiche
 		displayRecipeCards(filteredRecipes);
-
-		// Met à jour les listes de popup après le filtrage
-		updateElementsPopup(filteredRecipes);
-		updatePopupLists();
 
 		console.log("recettes:", filteredRecipes);
     }
