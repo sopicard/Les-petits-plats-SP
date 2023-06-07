@@ -8,6 +8,7 @@
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <script src="https://kit.fontawesome.com/4ebe5d99d1.js" crossorigin="anonymous" defer></script>
     <script type="module" src="scripts/pages/index.js"></script>
+    <script type="module" src="scripts/utils/popup.js"></script>
   </head>
   <body>
     <header>
@@ -44,7 +45,10 @@
           <span class="fa-solid fa-chevron-down"></span>
         </div>
       </div>
-      <div class="recipes-container"></div>
+      <div class="recipes-section">
+        <div class="recipes-container"></div>
+        <div class="no-recipes-message"></div>
+      </div>    
     </main>
   </body>
 </html>

@@ -1,131 +1,148 @@
-// Fonction générique pour obtenir des éléments uniques
-function getUniqueElements(recipes, element) {
-    const uniqueElements = new Set();
-
-    recipes.forEach(recipe => {
-        // Vérifiez si l'élément que nous voulons est "ingredients"
-        if (element === "ingredients") {
-            const items = recipe[element];
-            // Si items est un tableau d'objets (pour "ingredients")
-            if (Array.isArray(items) && typeof items[0] === "object") {
-                items.forEach(item => {
-                    uniqueElements.add(item.ingredient);
-                });
-            }
-        } 
-        // Pour les autres éléments ("appliance" et "utensils")
-        else {
-            const items = recipe[element];
-            // Si items est une chaîne (pour "appliance")
-            if (typeof items === "string") {
-                uniqueElements.add(items);
-            } 
-            // Si items est un tableau de chaînes (pour "utensils")
-            else if (Array.isArray(items) && typeof items[0] === "string") {
-                items.forEach(item => {
-                    uniqueElements.add(item);
-                });
-            }        
-        }
-    });
-
-    return Array.from(uniqueElements);
-}
-
+import { filterElements, addTag} from "../utils/filter.js";
 
 
 // Fonction générique pour créer une popup
-function createPopup(uniqueElements, elementType) {
-    const frenchNames = {
-        "ingredients": "ingrédient",
-        "appliance": "appareil",
-        "utensils": "ustensile"
-    };
+function createPopup(uniqueElements, elementType, processedRecipes) {
+	const frenchNames = {
+		"ingredients": "ingrédient",
+		"appliance": "appareil",
+		"utensils": "ustensile"
+	};
 
-    const popup = document.createElement("div");
-    popup.classList.add("popup", `${elementType}`);
+	const popup = document.createElement("div");
+	popup.classList.add("popup", `${elementType}`);
 
-    const popupSearchBarContent = document.createElement("div");
-    popupSearchBarContent.classList.add("popup-search-bar-content", `${elementType}` );
-    popup.appendChild(popupSearchBarContent);
+	const popupSearchBarContent = document.createElement("div");
+	popupSearchBarContent.classList.add("popup-search-bar-content", `${elementType}` );
+	popup.appendChild(popupSearchBarContent);
 
-    const popupSearchBar = document.createElement("input");
-    popupSearchBar.type = "text";
-    popupSearchBar.placeholder = `Rechercher un ${frenchNames[elementType]}`;
-    popupSearchBar.classList.add("popup-search-bar", `${elementType}`);
-    popupSearchBarContent.appendChild(popupSearchBar);
+	const popupSearchBar = document.createElement("input");
+	popupSearchBar.type = "text";
+	popupSearchBar.placeholder = `Rechercher un ${frenchNames[elementType]}`;
+	popupSearchBar.classList.add("popup-search-bar", `${elementType}`);
+	popupSearchBar.addEventListener("input", function() {
+		const query = this.value;
+		const filteredElements = filterElements(uniqueElements, query);
+		// Mise à jour du DOM avec filteredElements
+		const list = document.querySelector(`.popup-list.${elementType}`);
+		list.innerHTML = " ";  // Vide la liste
+		filteredElements.forEach(item => {
+		  const listItem = document.createElement("li");
+		  listItem.textContent = item;
+		  listItem.classList.add("popup-item", elementType);
+		  listItem.addEventListener("click", function() {
+			addTag(this.textContent, elementType, processedRecipes);
+		  });
+		  list.appendChild(listItem);  // Ajoute l'élément filtré à la liste
+		});
+	});
+	  
+	popupSearchBarContent.appendChild(popupSearchBar);
 
-    const popupArrowUp = document.createElement("span");
-    popupArrowUp.classList.add("fa-solid", "fa-chevron-up");
-    popupArrowUp.addEventListener("click", () => {
-        popup.remove();
-        document.querySelector(`.filter-button.${elementType}`).classList.remove("hidden-filter-button");
-        document.querySelector(".popup-placeholder").style.width = "0";
-    });    
-    popupSearchBarContent.appendChild(popupArrowUp);
+	const popupArrowUp = document.createElement("span");
+	popupArrowUp.classList.add("fa-solid", "fa-chevron-up");
+	popupArrowUp.addEventListener("click", () => {
+		popup.remove();
+		document.querySelector(`.filter-button.${elementType}`).classList.remove("hidden-filter-button");
+		document.querySelector(".popup-placeholder").classList.remove("popup-expanded");
+	});    
+	popupSearchBarContent.appendChild(popupArrowUp);
 
-    const popupList = document.createElement("ul");
-    popupList.classList.add("popup-list", `${elementType}`);
-    popup.appendChild(popupList);
+	const popupList = document.createElement("ul");
+	popupList.classList.add("popup-list", `${elementType}`);
+	popup.appendChild(popupList);
 
-    uniqueElements.forEach(item => {
-        const popupListItem = document.createElement("li");
-        popupListItem.textContent = item;
-        popupListItem.classList.add("popup-item", `${elementType}`);
-        popupListItem.addEventListener("click", function() {
-            addTag(this.textContent, elementType);
-        });
+	uniqueElements.forEach(item => {
+		const popupListItem = document.createElement("li");
+		popupListItem.textContent = item;
+		popupListItem.classList.add("popup-item", `${elementType}`);
+		popupListItem.addEventListener("click", function() {
+			addTag(this.textContent, elementType, processedRecipes);
+		});
 
-        popupList.appendChild(popupListItem);
-    });
+		popupList.appendChild(popupListItem);
+	});
 
-    return popup;
-}
-
-function addTag(tagText, elementType) {
-    const tag = document.createElement("div");
-    tag.textContent = tagText;
-    tag.classList.add("tag", elementType);
-
-    const cross = document.createElement("button");
-    cross.classList.add("fa-regular", "fa-circle-xmark", elementType, "tag-delete");
-
-    cross.addEventListener("click", function() {
-        tag.remove();
-    });
-
-    tag.appendChild(cross);
-
-    const tagsContainer = document.querySelector(".tags-container");
-    tagsContainer.appendChild(tag);
+	return popup;
 }
 
 let visiblePopup = null;
 let visiblePopupType = null;
 
 // Fonction générique pour afficher une popup
-export function displayPopup(recipes, elementType) {
-    const uniqueElements = getUniqueElements(recipes, elementType);
+export function displayPopup(uniqueElements, elementType, processedRecipes) {
+	// Crée une nouvelle popup et ajoute la classe "popup-visible"
+	const popup = createPopup(uniqueElements, elementType, processedRecipes);
+	popup.classList.add("popup-visible");
 
-    // Crée une nouvelle popup et ajoute la classe "active"
-    const popup = createPopup(uniqueElements, elementType);
-    popup.classList.add("popup-visible");
+	// Fermer la popup active (s'il y en a une)
+	if (visiblePopup) {
+		visiblePopup.classList.remove("popup-visible");
+		document.querySelector(`.filter-button.${visiblePopupType}`).classList.remove("hidden-filter-button");  
+	}
 
-    // Fermer la popup active (s'il y en a une)
-    if (visiblePopup) {
-        visiblePopup.classList.remove("popup-visible");
-        document.querySelector(`.filter-button.${visiblePopupType}`).classList.remove("hidden-filter-button");
-        document.querySelector('.popup-placeholder').style.width = "0";
-  }
+	visiblePopup = popup;
+	visiblePopupType = elementType;
 
-    visiblePopup = popup;
-    visiblePopupType = elementType;
+	document.querySelector(`.filter-button.${elementType}`).classList.add("hidden-filter-button");
+	document.querySelector(".popup-placeholder").classList.add("popup-expanded");
 
-    document.querySelector(`.filter-button.${elementType}`).classList.add("hidden-filter-button");
-    document.querySelector('.popup-placeholder').style.width = "calc(55% + 1rem)";
-
-    const popupContainer = document.querySelector(".popup-container");
-    popupContainer.innerHTML = '';
-    popupContainer.appendChild(popup);
+	const popupContainer = document.querySelector(".popup-container");
+	popupContainer.innerHTML = " ";
+	popupContainer.appendChild(popup);
 }
 
+export function updateElementsPopup(filteredRecipes) {
+	const newUniqueIngredients = [];
+	const newUniqueAppliance = [];
+	const newUniqueUtensils = [];
+
+	filteredRecipes.forEach(recipe => {
+		recipe.ingredients.forEach(ingredient => {
+		if (!newUniqueIngredients.includes(ingredient)) {
+			newUniqueIngredients.push(ingredient);
+		}
+		});
+		
+		if (!newUniqueAppliance.includes(recipe.appliance)) {
+		newUniqueAppliance.push(recipe.appliance);
+		}
+
+		recipe.utensils.forEach(utensil => {
+		if (!newUniqueUtensils.includes(utensil)) {
+			newUniqueUtensils.push(utensil);
+		}
+		});
+	});
+
+	window.uniqueRecipeElements.ingredients = newUniqueIngredients;
+	window.uniqueRecipeElements.appliance = newUniqueAppliance;
+	window.uniqueRecipeElements.utensils = newUniqueUtensils;
+}
+
+export function updatePopupLists() {
+	const elementTypes = ['ingredients', 'appliance', 'utensils'];
+
+	elementTypes.forEach(elementType => {
+		const list = document.querySelector(`.popup-list.${elementType}`);
+		if (list) {
+
+			list.innerHTML = " ";
+		
+			window.uniqueRecipeElements[elementType].forEach(item => {
+				const listItem = document.createElement("li");
+				listItem.textContent = item;
+				listItem.classList.add("popup-item", elementType);
+				listItem.addEventListener("click", function() {
+				addTag(this.textContent, elementType, processedRecipes);
+				});
+				list.appendChild(listItem);
+			});
+		}
+	});
+}
+  
+
+
+
+  
