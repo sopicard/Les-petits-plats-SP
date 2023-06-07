@@ -18,5 +18,5 @@ dans un nouveau projet : réaliser son propre site de recettes de cuisine ayant 
 
 ## Fonctionnalités clés
 
-- `poc/algo-1` : C'est la branche sur laquelle la fonction de recherche des recettes est traitée avec la méthode filter de JavaScript. Cette approche offre une grande lisibilité et facilite l'écriture du code de filtrage.
+- `main` : C'est la branche sur laquelle la fonction de recherche des recettes est traitée avec la méthode filter de JavaScript. Cette approche offre une grande lisibilité et facilite l'écriture du code de filtrage.
 - `poc/algo-2` : C'est la branche sur laquelle la fonction de recherche des recettes est traitée avec les boucles natives de JavaScript. Cette approche donne plus de contrôle sur le processus d'itération et pourrait donner plus de flexibilité pour modifier le code en fonction de critères spécifiques.
