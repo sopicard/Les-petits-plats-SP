@@ -109,7 +109,7 @@ export function addTag(tagText, elementType, processedRecipes) {
   
     const message = document.createElement("p");
     message.classList.add("no-recipes-message");
-    message.textContent = "Aucune recette ne correspond à votre recherche";
+    message.textContent = "Aucune recette ne correspond à votre recherche ... vous pouvez chercher \"tartes aux pommes\", \"poisson\", etc.";
     
     recipesSection.appendChild(message);
   }
