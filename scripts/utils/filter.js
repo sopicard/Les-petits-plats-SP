@@ -89,8 +89,6 @@ export function filterRecipes(recipes, query = { text: "", tags: [] }) {
   return filtered;
 }
 
-
-
 // Filtre les éléments (ingrédients, appareils, ustensiles) en fonction d'une requête
 export function filterElements (elements, query) {
   return elements.filter(element => element.toLowerCase().includes(query.toLowerCase()));
