@@ -138,7 +138,7 @@ export function addTag(tagText, elementType, processedRecipes) {
     if (previousMessage) previousMessage.remove();
   
     const message = document.createElement("p");
-    message.classList.add("no-recipes-message");
+    message.classList.add("no-recipes-message");  
     message.textContent = "Aucune recette ne correspond à votre critère ... vous pouvez chercher \" tarte aux pommes \" , \" poisson \", etc.";
     
     recipesSection.appendChild(message);

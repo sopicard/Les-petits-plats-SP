@@ -1,6 +1,5 @@
 import { filterElements, addTag} from "../utils/filter.js";
 
-
 // Fonction générique pour créer une popup
 function createPopup(uniqueElements, elementType, processedRecipes) {
 	const frenchNames = {
@@ -9,6 +8,7 @@ function createPopup(uniqueElements, elementType, processedRecipes) {
 		"utensils": "ustensile"
 	};
 
+	// Création des élémnents DOM pour la popup
 	const popup = document.createElement("div");
 	popup.classList.add("popup", `${elementType}`);
 
@@ -20,12 +20,14 @@ function createPopup(uniqueElements, elementType, processedRecipes) {
 	popupSearchBar.type = "text";
 	popupSearchBar.placeholder = `Rechercher un ${frenchNames[elementType]}`;
 	popupSearchBar.classList.add("popup-search-bar", `${elementType}`);
+	// Ecouteur d'évènement sur la barre de recherche de la popup
 	popupSearchBar.addEventListener("input", function() {
+		// Traitement de la recherche
 		const query = this.value;
 		const filteredElements = filterElements(uniqueElements, query);
 		// Mise à jour du DOM avec filteredElements
 		const list = document.querySelector(`.popup-list.${elementType}`);
-		list.innerHTML = " ";  // Vide la liste
+		list.innerHTML = " ";
 		filteredElements.forEach(item => {
 		  const listItem = document.createElement("li");
 		  listItem.textContent = item;
@@ -69,7 +71,7 @@ function createPopup(uniqueElements, elementType, processedRecipes) {
 let visiblePopup = null;
 let visiblePopupType = null;
 
-// Fonction générique pour afficher une popup
+// Fonction pour afficher une popup
 export function displayPopup(uniqueElements, elementType, processedRecipes) {
 	// Crée une nouvelle popup et ajoute la classe "popup-visible"
 	const popup = createPopup(uniqueElements, elementType, processedRecipes);
@@ -87,11 +89,13 @@ export function displayPopup(uniqueElements, elementType, processedRecipes) {
 	document.querySelector(`.filter-button.${elementType}`).classList.add("hidden-filter-button");
 	document.querySelector(".popup-placeholder").classList.add("popup-expanded");
 
+	// Affichage de la nouvelle popup
 	const popupContainer = document.querySelector(".popup-container");
 	popupContainer.innerHTML = " ";
 	popupContainer.appendChild(popup);
 }
 
+// Met à jour les éléments de la popup en fonction des recettes filtrées
 export function updateElementsPopup(filteredRecipes) {
 	const newUniqueIngredients = [];
 	const newUniqueAppliance = [];
@@ -115,11 +119,13 @@ export function updateElementsPopup(filteredRecipes) {
 		});
 	});
 
+	// Mise à jour des éléments uniques dans la fenêtre globale
 	window.uniqueRecipeElements.ingredients = newUniqueIngredients;
 	window.uniqueRecipeElements.appliance = newUniqueAppliance;
 	window.uniqueRecipeElements.utensils = newUniqueUtensils;
 }
 
+// Met à jour les listes avec les éléments uniques
 export function updatePopupLists() {
 	const elementTypes = ['ingredients', 'appliance', 'utensils'];
 

@@ -33,7 +33,6 @@ export function displayRecipeCards(recipes) {
 	}
 }
 
-
 // Filtrage et affichage des recettes
 function filterAndDisplayRecipes(query) {
     const filteredRecipes = filterRecipes(window.processedRecipes, query);
@@ -52,7 +51,6 @@ function filterAndDisplayRecipes(query) {
 		console.log("recettes:", filteredRecipes);
     }
 }
-
 
 async function init() {
     // Récupère et prépare les recettes

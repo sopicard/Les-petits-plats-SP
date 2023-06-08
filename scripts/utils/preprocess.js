@@ -1,6 +1,6 @@
 import { getRecipes } from "../pages/index.js";
 
-// Fonction pour prétraiter les recettes
+// Fonction pour prétraiter les tableaux ingrédients, appareil et ustensiles
 export async function preprocessRecipes() {
     // Récupère les recettes
     const recipes = await getRecipes();
