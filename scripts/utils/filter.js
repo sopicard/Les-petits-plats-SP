@@ -29,35 +29,65 @@ function updateDOM(recipes) {
   }
 }
 
-// Filtre les recettes en fonction d'une requête et de tags
+// La fonction prend en entrée un tableau de recettes et une requête de recherche, et renvoie un tableau de recettes filtrées qui correspondent à la requête.
 export function filterRecipes(recipes, query = { text: "", tags: [] }) {
-  // Divise la requête en mots et les stocke dans queryTextWords
+  
+  // Convertit le texte de la requête en minuscules et le divise en mots individuels.
   const queryTextWords = query.text.toLowerCase().split(" ");
 
-  // Vérifie si tous les mots de la requête sont présents dans les mots de l'élément donné
+  // Vérifie si tous les mots de la requête sont présents dans les mots de l'élément donné.
   function matchesQuery(item, queryWords) {
-    return queryWords.every(queryWord => item.toLowerCase().includes(queryWord));
+    // Convertit l'élément en minuscules pour une comparaison correcte.
+    const lowerCaseItem = item.toLowerCase();
+  
+    // Parcourt tous les mots de la requête.
+    for (let i = 0; i < queryWords.length; i++) {
+      // Si l'élément ne contient pas le mot de la requête actuelle, retourne false.
+      if (!lowerCaseItem.includes(queryWords[i])) {
+        return false;
+      }
+    }
+  
+    // Si tous les mots de la requête sont présents dans l'élément, retourne true.
+    return true;
   }
 
-  const filtered = recipes.filter(recipe => {
+  // Création d'un tableau vide qui contiendra les recettes filtrées.
+  let filtered = [];
+
+  // Boucle à travers toutes les recettes.
+  for(let i = 0; i < recipes.length; i++) {
+    const recipe = recipes[i];
+    
+    // Vérifie si le titre ou la description de la recette contient tous les mots de la requête.
     const inTitle = matchesQuery(recipe.name, queryTextWords);
     const inDescription = matchesQuery(recipe.description, queryTextWords);
-    const inIngredients = recipe.ingredients.some(ingredient =>
-      matchesQuery(ingredient, queryTextWords)
-    );
-
+    
+    // Vérifie si l'un des ingrédients de la recette contient tous les mots de la requête.
+    let inIngredients = false;
+    for(let j = 0; j < recipe.ingredients.length; j++) {
+      if(matchesQuery(recipe.ingredients[j], queryTextWords)) {
+        inIngredients = true;
+        break;
+      }
+    }
+    
+    // Vérifie si les tags sélectionnés correspondent aux ingrédients, à l'appareil ou aux ustensils de la recette.
     const tagsMatch = query.tags.every(tag =>
       recipe.ingredients.some(ingredient => matchesQuery(ingredient, [tag])) ||
       recipe.appliance.includes(tag) ||
       recipe.utensils.some(utensil => utensil.includes(tag))
     );
 
-    return (inTitle || inDescription || inIngredients) && tagsMatch;
-  });
+    // Si le titre, la description ou un ingrédient de la recette contient tous les mots de la requête, et que tous les tags correspondent, alors la recette est ajoutée au tableau filtré.
+    if ((inTitle || inDescription || inIngredients) && tagsMatch) {
+      filtered.push(recipe);
+    }
+  }
 
+  // Retourne le tableau de recettes filtrées.
   return filtered;
 }
-
 
 // Filtre les éléments (ingrédients, appareils, ustensiles) en fonction d'une requête
 export function filterElements (elements, query) {
@@ -108,7 +138,8 @@ export function addTag(tagText, elementType, processedRecipes) {
     if (previousMessage) previousMessage.remove();
   
     const message = document.createElement("p");
-    message.classList.add("no-recipes-message");
-    message.textContent = "Aucune recette ne correspond à votre recherche ... vous pouvez chercher \" tartes aux pommes \" , \" poisson \", etc.";  
+    message.classList.add("no-recipes-message");  
+    message.textContent = "Aucune recette ne correspond à votre critère ... vous pouvez chercher \" tarte aux pommes \" , \" poisson \", etc.";
+    
     recipesSection.appendChild(message);
   }

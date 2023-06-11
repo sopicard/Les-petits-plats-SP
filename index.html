@@ -4,19 +4,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Titre de la page -->
     <title>Les petits plats</title>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <!-- Script pour icônes Fontawesome -->
     <script src="https://kit.fontawesome.com/4ebe5d99d1.js" crossorigin="anonymous" defer></script>
+    <!-- Script JS -->
     <script type="module" src="scripts/pages/index.js"></script>
     <script type="module" src="scripts/utils/popup.js"></script>
   </head>
   <body>
+    <!-- En-tête -->
     <header>
       <div class="logo">
         <img class= "logo-img" src="assets/img/logo_lespetitsplats.png" alt="logo Les petits plats">
       </div>  
     </header>
+    <!-- Contenu principal -->
     <main>
+      <!-- Barre de recherche -->
       <div class="search-container">
         <form class="search-form"> 
           <label for="search" aria-label="Ecrire votre recherche"></label>
@@ -28,9 +34,13 @@
           </div>
         </form>
       </div>  
+      <!-- Conteneur pour les tags -->
       <div class="tags-container"></div>
+      <!-- Conteneur pour les boutons ingrédients appareil et ustensiles -->
       <div class="buttons-container">
+        <!-- Conteneur pour les fenêtres ouvertes sur ingrédients appareil ou ustensiles -->
         <div class="popup-container"></div>
+        <!-- Placeholder pour l'expansion des popup -->
         <div class="popup-placeholder"></div>
         <div class="filter-button ingredients">
           <button class="ingredients-button">Ingrédients</button>
@@ -45,8 +55,10 @@
           <span class="fa-solid fa-chevron-down"></span>
         </div>
       </div>
+      <!-- Affichage des cartes de recette -->
       <div class="recipes-section">
         <div class="recipes-container"></div>
+        <!-- Message quand aucune recette trouvée -->
         <div class="no-recipes-message"></div>
       </div>    
     </main>
