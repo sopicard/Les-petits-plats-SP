@@ -48,7 +48,7 @@ function filterAndDisplayRecipes(query) {
 		// Si des recettes correspondent à la requête, les affiche
 		displayRecipeCards(filteredRecipes);
 
-		console.log("recettes:", filteredRecipes);
+		console.log("recettes filtrées:", filteredRecipes);
     }
 }
 
